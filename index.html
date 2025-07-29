@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Checklista</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    input[type="text"] {
+      width: 70%;
+      padding: 10px;
+      font-size: 1.2em;
+      box-sizing: border-box;
+    }
+    button {
+      padding: 10px 15px;
+      font-size: 1.2em;
+      margin-left: 10px;
+      cursor: pointer;
+      background-color: #4CAF50;
+      border: none;
+      color: white;
+      border-radius: 4px;
+    }
+    ul {
+      list-style: none;
+      padding-left: 0;
+      margin-top: 20px;
+    }
+    li {
+      cursor: pointer;
+      padding: 10px;
+      font-size: 1.3em;
+      border-bottom: 1px solid #ccc;
+      user-select: none;
+    }
+    li.checked {
+      text-decoration: line-through;
+      color: gray;
+    }
+  </style>
+
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#4CAF50" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2245%22 fill=%22%234CAF50%22 /><path d=%22M30 55 L45 70 L70 35%22 stroke=%22white%22 stroke-width=%228%22 fill=%22none%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22 /></svg>" />
+
+</head>
+<body>
+  <h1>Checklista</h1>
+  <input id="input" type="text" placeholder="Skriv en punkt här..." />
+  <button onclick="addItem()">Lägg till</button>
+  <ul id="checklist"></ul>
+
+  <script>
+    const input = document.getElementById("input");
+    const checklist = document.getElementById("checklist");
+
+    function addItem() {
+      const text = input.value.trim();
+      if (text === "") return;
+      const li = document.createElement("li");
+      li.textContent = text;
+      li.onclick = () => li.classList.toggle("checked");
+      checklist.appendChild(li);
+      input.value = "";
+      input.focus();
+    }
+
+    // Lägg till med Enter
+    input.addEventListener("keydown", e => {
+      if (e.key === "Enter") addItem();
+    });
+  </script>
+</body>
+</html>
