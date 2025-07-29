@@ -5,99 +5,138 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Checklista</title>
 
-  <!-- Manifest och mobiloptimering -->
+  <!-- Mobilvänlig app -->
   <link rel="manifest" href="manifest.json" />
-  <meta name="theme-color" content="#1e3a8a" />
+  <meta name="theme-color" content="#1e1e1e" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   <link rel="apple-touch-icon" href="icon-192.png" />
 
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
-
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
     body {
-      font-family: 'Inter', sans-serif;
       margin: 0;
-      padding: 0;
-      background-color: #f8fafc;
-      color: #1f2937;
+      font-family: "Segoe UI", sans-serif;
+      background-color: #121212;
+      color: #fff;
     }
 
     .container {
-      max-width: 480px;
+      max-width: 500px;
       margin: 2rem auto;
-      padding: 2rem;
-      background-color: #ffffff;
+      padding: 1.5rem;
+      background-color: #1e1e1e;
       border-radius: 12px;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
     }
 
     h1 {
       text-align: center;
-      color: #1e3a8a;
+      color: #f5f5f5;
       margin-bottom: 1.5rem;
-      font-size: 1.75rem;
     }
 
-    .input-group {
+    .input-row {
       display: flex;
       gap: 0.5rem;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
     }
 
     input[type="text"] {
       flex: 1;
-      padding: 0.75rem;
-      font-size: 1rem;
-      border: 1px solid #cbd5e1;
+      padding: 0.6rem;
+      border: none;
       border-radius: 8px;
-      outline: none;
+      background-color: #2a2a2a;
+      color: #fff;
     }
 
     button {
-      padding: 0.75rem 1rem;
-      background-color: #1e3a8a;
-      color: white;
+      padding: 0.6rem 1rem;
       border: none;
       border-radius: 8px;
-      font-size: 1rem;
+      background-color: #ff6b6b;
+      color: white;
       cursor: pointer;
-      transition: background-color 0.2s ease;
+      font-weight: bold;
     }
 
     button:hover {
-      background-color: #1d4ed8;
+      background-color: #ff4d4d;
+    }
+
+    #clear-btn {
+      width: 100%;
+      background-color: #444;
+      margin-top: 1rem;
+    }
+
+    #clear-btn:hover {
+      background-color: #666;
     }
 
     ul {
       list-style: none;
       padding: 0;
-      margin: 0;
+      margin-top: 1rem;
     }
 
     li {
       display: flex;
       align-items: center;
-      padding: 0.75rem 0;
-      border-bottom: 1px solid #e2e8f0;
+      justify-content: space-between;
+      background-color: #2a2a2a;
+      padding: 0.75rem;
+      margin-bottom: 0.5rem;
+      border-radius: 8px;
+      opacity: 0;
+      transform: translateY(10px);
+      animation: fadeIn 0.3s forwards;
     }
 
-    li:last-child {
-      border-bottom: none;
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .fade-out {
+      animation: fadeOut 0.3s forwards;
+    }
+
+    @keyframes fadeOut {
+      to {
+        opacity: 0;
+        transform: translateX(20px);
+      }
     }
 
     li.completed {
+      color: #888;
       text-decoration: line-through;
-      color: #94a3b8;
+      transition: color 0.3s, text-decoration 0.3s;
     }
 
-    li input[type="checkbox"] {
-      margin-right: 0.75rem;
+    li .left {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .delete-btn {
+      background: none;
+      border: none;
+      color: #ff6b6b;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .delete-btn:hover {
+      color: #ff4d4d;
+    }
+
+    input[type="checkbox"] {
       transform: scale(1.2);
     }
   </style>
@@ -105,42 +144,81 @@
 <body>
   <div class="container">
     <h1>Checklista</h1>
-    <div class="input-group">
-      <input type="text" id="new-task" placeholder="Lägg till en ny punkt..." />
+    <div class="input-row">
+      <input type="text" id="new-task" placeholder="Lägg till en punkt..." />
       <button id="add-btn">+</button>
     </div>
     <ul id="task-list"></ul>
+    <button id="clear-btn">Rensa</button>
   </div>
 
   <script>
-    const addBtn = document.getElementById('add-btn');
-    const newTaskInput = document.getElementById('new-task');
-    const taskList = document.getElementById('task-list');
+    const addBtn = document.getElementById("add-btn");
+    const newTaskInput = document.getElementById("new-task");
+    const taskList = document.getElementById("task-list");
+    const clearBtn = document.getElementById("clear-btn");
 
-    addBtn.addEventListener('click', () => {
-      const taskText = newTaskInput.value.trim();
-      if (taskText === '') return;
+    function createTaskElement(text) {
+      const li = document.createElement("li");
 
-      const li = document.createElement('li');
-      const checkbox = document.createElement('input');
-      checkbox.type = 'checkbox';
+      const left = document.createElement("div");
+      left.classList.add("left");
 
-      checkbox.addEventListener('change', () => {
-        li.classList.toggle('completed', checkbox.checked);
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.addEventListener("change", () => {
+        li.classList.toggle("completed", checkbox.checked);
       });
 
-      li.appendChild(checkbox);
-      li.appendChild(document.createTextNode(taskText));
-      taskList.appendChild(li);
+      const taskText = document.createElement("span");
+      taskText.textContent = text;
 
-      newTaskInput.value = '';
+      left.appendChild(checkbox);
+      left.appendChild(taskText);
+
+      const deleteBtn = document.createElement("button");
+      deleteBtn.className = "delete-btn";
+      deleteBtn.innerHTML = "&times;";
+      deleteBtn.addEventListener("click", () => {
+        li.classList.add("fade-out");
+        li.addEventListener("animationend", () => {
+          li.remove();
+        });
+      });
+
+      li.appendChild(left);
+      li.appendChild(deleteBtn);
+
+      return li;
+    }
+
+    function addTask() {
+      const text = newTaskInput.value.trim();
+      if (text === "") return;
+
+      const taskElement = createTaskElement(text);
+      taskList.appendChild(taskElement);
+
+      newTaskInput.value = "";
       newTaskInput.focus();
+    }
+
+    addBtn.addEventListener("click", addTask);
+
+    newTaskInput.addEventListener("keyup", (e) => {
+      if (e.key === "Enter") {
+        addTask();
+      }
     });
 
-    newTaskInput.addEventListener('keyup', (e) => {
-      if (e.key === 'Enter') {
-        addBtn.click();
-      }
+    clearBtn.addEventListener("click", () => {
+      const tasks = Array.from(taskList.children);
+      tasks.forEach((li) => {
+        li.classList.add("fade-out");
+        li.addEventListener("animationend", () => {
+          li.remove();
+        });
+      });
     });
   </script>
 </body>
