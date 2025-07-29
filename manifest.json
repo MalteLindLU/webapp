@@ -3,7 +3,7 @@
     "short_name": "Checklista",
     "start_url": "/",
     "display": "standalone",
-    "background_color": "#ffffff",
+    "background_color": "#007BFF",
     "theme_color": "#007BFF",
     "icons": [
       {
