@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-    <title>Checklista App med Meny</title>
+    <title>Maltes app</title>
 
     <link rel="manifest" href="manifest.json" />
     <meta name="theme-color" content="#2c2c2c" />
@@ -18,7 +18,7 @@
             background-color: #2c2c2c;
             font-family: Arial, sans-serif;
             color: white;
-            overflow: hidden; /* Lås scroll på hela sidan */
+            overflow: hidden; /* Lås scroll */
             -webkit-user-select: none;
             user-select: none;
         }
@@ -43,6 +43,7 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            user-select: none;
         }
         #hamburger div {
             width: 100%;
@@ -51,7 +52,6 @@
             border-radius: 2px;
             transition: all 0.3s ease;
         }
-        /* När meny är öppen */
         #hamburger.open div:nth-child(1) {
             transform: rotate(45deg) translate(5px, 5px);
         }
@@ -66,7 +66,7 @@
         #side-menu {
             position: fixed;
             top: 0;
-            left: -250px; /* gömd utanför skärmen */
+            left: -250px;
             width: 250px;
             height: 100%;
             background-color: #1e1e1e;
@@ -103,17 +103,61 @@
             color: white;
         }
 
+        /* Gemensamt för alla sidor */
         h1 {
             margin: 2rem 0 1rem 0;
             font-weight: normal;
             color: white;
             user-select: none;
+            text-align: center;
+        }
+
+        /* Framsidan */
+        #home {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+        #home h2 {
+            font-weight: normal;
+            margin-bottom: 2rem;
+            font-size: 1.5rem;
+        }
+        #home button {
+            width: 100%;
+            max-width: 300px;
+            margin: 0.5rem 0;
+            padding: 0.75rem;
+            font-size: 1.1rem;
+            border-radius: 6px;
+            border: none;
+            background-color: #3a3a3a;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            user-select: none;
+        }
+        #home button:hover {
+            background-color: #555;
+        }
+
+        /* Checklista sidan */
+        #checklist-page {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 500px;
         }
 
         #input-area {
             display: flex;
             width: 100%;
-            max-width: 500px;
             margin-bottom: 1rem;
         }
         #new-task {
@@ -144,8 +188,6 @@
         }
 
         #task-list-container {
-            width: 100%;
-            max-width: 500px;
             background-color: #3a3a3a;
             border-radius: 8px;
             max-height: 60vh;
@@ -154,6 +196,7 @@
             user-select: none;
             box-sizing: border-box;
             padding: 0.5rem 1rem;
+            width: 100%;
         }
 
         ul#task-list {
@@ -216,17 +259,31 @@
             user-select: none;
             transition: background-color 0.3s;
             width: 100%;
-            max-width: 500px;
             box-sizing: border-box;
         }
         #clear-btn:hover {
             background-color: #b02a37;
         }
+
+        /* Sidor xxx */
+        #xxx1-page, #xxx2-page {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            max-width: 500px;
+            user-select: none;
+        }
+        #xxx1-page p, #xxx2-page p {
+            font-size: 1.2rem;
+            color: #ccc;
+        }
     </style>
 </head>
 <body>
 
-    <div id="hamburger" aria-label="Meny" role="button" tabindex="0">
+    <div id="hamburger" aria-label="Meny" role="button" tabindex="0" style="display:none;">
         <div></div>
         <div></div>
         <div></div>
@@ -241,39 +298,136 @@
         </ul>
     </nav>
 
-    <h1>Checklista</h1>
+    <!-- Framsida -->
+    <section id="home">
+        <h2>Hej och välkommen till Maltes app</h2>
+        <button data-page="checklista">Checklista</button>
+        <button data-page="xxx1">xxx</button>
+        <button data-page="xxx2">xxx</button>
+    </section>
 
-    <div id="input-area">
-        <input type="text" id="new-task" placeholder="Skriv en punkt..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
-        <button id="add-btn">Lägg till</button>
-    </div>
+    <!-- Checklista sidan -->
+    <section id="checklist-page" aria-label="Checklista">
+        <h1>Checklista</h1>
+        <div id="input-area">
+            <input id="new-task" type="text" placeholder="Lägg till ny punkt" aria-label="Lägg till ny punkt" />
+            <button id="add-btn" aria-label="Lägg till punkt">+</button>
+        </div>
+        <div id="task-list-container">
+            <ul id="task-list"></ul>
+        </div>
+        <button id="clear-btn" aria-label="Rensa alla punkter">Rensa alla punkter</button>
+    </section>
 
-    <div id="task-list-container">
-        <ul id="task-list"></ul>
-        <button id="clear-btn">Rensa</button>
-    </div>
+    <!-- Xxx sidor -->
+    <section id="xxx1-page">
+        <h1>xxx</h1>
+        <p>Här kan du lägga till innehåll för sidan xxx.</p>
+    </section>
+
+    <section id="xxx2-page">
+        <h1>xxx</h1>
+        <p>Här kan du lägga till innehåll för sidan xxx.</p>
+    </section>
 
     <script>
-        const addBtn = document.getElementById('add-btn');
-        const newTaskInput = document.getElementById('new-task');
-        const taskList = document.getElementById('task-list');
-        const clearBtn = document.getElementById('clear-btn');
-        const taskListContainer = document.getElementById('task-list-container');
-
         const hamburger = document.getElementById('hamburger');
         const sideMenu = document.getElementById('side-menu');
-        const menuItems = sideMenu.querySelectorAll('ul li');
+        const menuItems = sideMenu.querySelectorAll('li');
         const pageTitle = document.querySelector('h1');
+
+        const homeSection = document.getElementById('home');
+        const checklistPage = document.getElementById('checklist-page');
+        const xxx1Page = document.getElementById('xxx1-page');
+        const xxx2Page = document.getElementById('xxx2-page');
+
+        // Funktion för att visa rätt sida
+        function showPage(page) {
+            // Stäng meny om öppen
+            if (sideMenu.classList.contains('open')) {
+                toggleMenu();
+            }
+
+            // Dölj alla sidor
+            homeSection.style.display = 'none';
+            checklistPage.style.display = 'none';
+            xxx1Page.style.display = 'none';
+            xxx2Page.style.display = 'none';
+
+            // Visa vald sida
+            switch(page) {
+                case 'home':
+                    homeSection.style.display = 'flex';
+                    break;
+                case 'checklista':
+                    checklistPage.style.display = 'flex';
+                    break;
+                case 'xxx1':
+                    xxx1Page.style.display = 'flex';
+                    break;
+                case 'xxx2':
+                    xxx2Page.style.display = 'flex';
+                    break;
+                default:
+                    homeSection.style.display = 'flex';
+            }
+        }
+
+        // Start på framsidan
+        showPage('home');
+
+        // Meny-funktionalitet
+        function toggleMenu() {
+            const isOpen = sideMenu.classList.toggle('open');
+            hamburger.classList.toggle('open', isOpen);
+            sideMenu.setAttribute('aria-hidden', !isOpen);
+        }
+
+        hamburger.addEventListener('click', toggleMenu);
+        hamburger.addEventListener('keydown', e => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                toggleMenu();
+            }
+        });
+
+        menuItems.forEach(item => {
+            item.addEventListener('click', () => {
+                showPage(item.dataset.page);
+            });
+            item.addEventListener('keydown', e => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    item.click();
+                }
+            });
+        });
+
+        // Navigering från framsidans knappar
+        document.querySelectorAll('#home button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                showPage(btn.dataset.page);
+                hamburger.style.display = 'flex'; // Visa hamburger när man lämnar framsidan
+            });
+        });
+
+        // Visa hamburger först bara när man lämnar framsidan
+        hamburger.style.display = 'none';
+
+        // Checklista funktionalitet (exempel)
+        const taskList = document.getElementById('task-list');
+        const addBtn = document.getElementById('add-btn');
+        const newTaskInput = document.getElementById('new-task');
+        const clearBtn = document.getElementById('clear-btn');
 
         function addTask(text) {
             const li = document.createElement('li');
-
             const checkbox = document.createElement('input');
             checkbox.type = 'checkbox';
-
+            checkbox.setAttribute('aria-label', `Markera "${text}" som klar`);
             const span = document.createElement('span');
-            span.className = 'task-text';
             span.textContent = text;
+            span.className = 'task-text';
 
             checkbox.addEventListener('change', () => {
                 li.classList.toggle('completed', checkbox.checked);
@@ -282,6 +436,7 @@
             const deleteBtn = document.createElement('button');
             deleteBtn.textContent = 'X';
             deleteBtn.className = 'delete-btn';
+            deleteBtn.setAttribute('aria-label', `Ta bort punkten "${text}"`);
             deleteBtn.addEventListener('click', () => {
                 li.remove();
             });
@@ -317,38 +472,6 @@
                 clearTasks();
             }
         });
-
-        // Meny funktionalitet
-        function toggleMenu() {
-            const isOpen = sideMenu.classList.toggle('open');
-            hamburger.classList.toggle('open', isOpen);
-            sideMenu.setAttribute('aria-hidden', !isOpen);
-        }
-
-        hamburger.addEventListener('click', toggleMenu);
-        hamburger.addEventListener('keydown', e => {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                toggleMenu();
-            }
-        });
-
-        menuItems.forEach(item => {
-            item.addEventListener('click', () => {
-                const page = item.dataset.page;
-                // För demo: ändra rubrik och stäng meny
-                pageTitle.textContent = item.textContent;
-                toggleMenu();
-                alert(`Du valde menyalternativet: ${item.textContent}`);
-            });
-            item.addEventListener('keydown', e => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    item.click();
-                }
-            });
-        });
     </script>
-
 </body>
 </html>
