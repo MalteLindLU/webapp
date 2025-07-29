@@ -75,6 +75,7 @@
             box-sizing: border-box;
             transition: left 0.3s ease;
             z-index: 1000;
+            user-select: none;
         }
         #side-menu.open {
             left: 0;
@@ -90,11 +91,13 @@
             margin: 1rem 0 0 0;
         }
         #side-menu ul li {
-            padding: 0.5rem 0;
+            padding: 0.75rem 0;
             border-bottom: 1px solid #444;
             cursor: pointer;
             color: #aaa;
             user-select: none;
+            font-size: 1.1rem;
+            transition: color 0.2s;
         }
         #side-menu ul li:hover {
             color: white;
@@ -123,6 +126,7 @@
             background-color: #3a3a3a;
             color: white;
             user-select: text;
+            text-align: left;
         }
         #add-btn {
             background-color: #28a745;
@@ -231,10 +235,9 @@
     <nav id="side-menu" aria-hidden="true">
         <h2>Menyn</h2>
         <ul>
-            <li>Funktion 1</li>
-            <li>Funktion 2</li>
-            <li>Funktion 3</li>
-            <!-- Lägg till fler saker här senare -->
+            <li data-page="checklista">Checklista</li>
+            <li data-page="xxx1">xxx</li>
+            <li data-page="xxx2">xxx</li>
         </ul>
     </nav>
 
@@ -259,6 +262,8 @@
 
         const hamburger = document.getElementById('hamburger');
         const sideMenu = document.getElementById('side-menu');
+        const menuItems = sideMenu.querySelectorAll('ul li');
+        const pageTitle = document.querySelector('h1');
 
         function addTask(text) {
             const li = document.createElement('li');
@@ -275,12 +280,10 @@
             });
 
             const deleteBtn = document.createElement('button');
+            deleteBtn.textContent = 'X';
             deleteBtn.className = 'delete-btn';
-            deleteBtn.textContent = '×';
-            deleteBtn.title = 'Ta bort';
-
             deleteBtn.addEventListener('click', () => {
-                taskList.removeChild(li);
+                li.remove();
             });
 
             li.appendChild(checkbox);
@@ -290,25 +293,62 @@
             taskList.appendChild(li);
         }
 
+        function clearTasks() {
+            taskList.innerHTML = '';
+        }
+
         addBtn.addEventListener('click', () => {
-            const taskText = newTaskInput.value.trim();
-            if (taskText === '') return;
-            addTask(taskText);
-            newTaskInput.value = '';
-            newTaskInput.focus();
+            const text = newTaskInput.value.trim();
+            if (text.length > 0) {
+                addTask(text);
+                newTaskInput.value = '';
+                newTaskInput.focus();
+            }
         });
 
-        newTaskInput.addEventListener('keyup', (e) => {
+        newTaskInput.addEventListener('keydown', e => {
             if (e.key === 'Enter') {
                 addBtn.click();
             }
         });
 
         clearBtn.addEventListener('click', () => {
-            taskList.innerHTML = '';
-            newTaskInput.focus();
+            if (confirm('Vill du verkligen rensa alla punkter?')) {
+                clearTasks();
+            }
         });
 
-        // Förhindra scroll på hela sidan men tillåt scroll i listan
-        document.addEventListener('touchmove', function(e) {
-            if (taskListContainer.contains(e.target) || sideMenu
+        // Meny funktionalitet
+        function toggleMenu() {
+            const isOpen = sideMenu.classList.toggle('open');
+            hamburger.classList.toggle('open', isOpen);
+            sideMenu.setAttribute('aria-hidden', !isOpen);
+        }
+
+        hamburger.addEventListener('click', toggleMenu);
+        hamburger.addEventListener('keydown', e => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                toggleMenu();
+            }
+        });
+
+        menuItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const page = item.dataset.page;
+                // För demo: ändra rubrik och stäng meny
+                pageTitle.textContent = item.textContent;
+                toggleMenu();
+                alert(`Du valde menyalternativet: ${item.textContent}`);
+            });
+            item.addEventListener('keydown', e => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    item.click();
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
