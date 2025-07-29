@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-    <title>Checklista App</title>
+    <title>Checklista App med Meny</title>
 
-    <!-- Manifest och mobiloptimering -->
     <link rel="manifest" href="manifest.json" />
     <meta name="theme-color" content="#2c2c2c" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -20,7 +19,7 @@
             font-family: Arial, sans-serif;
             color: white;
             overflow: hidden; /* Lås scroll på hela sidan */
-            -webkit-user-select: none; /* Inaktivera markering för att minska oväntade drag */
+            -webkit-user-select: none;
             user-select: none;
         }
         body {
@@ -30,13 +29,84 @@
             justify-content: flex-start;
             padding: 1rem;
             box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent; /* ta bort highlight vid klick på iPhone */
+            -webkit-tap-highlight-color: transparent;
         }
-        h1 {
-            margin-bottom: 1rem;
+        /* Hamburger ikon */
+        #hamburger {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            width: 30px;
+            height: 22px;
+            cursor: pointer;
+            z-index: 1001;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        #hamburger div {
+            width: 100%;
+            height: 4px;
+            background-color: white;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+        /* När meny är öppen */
+        #hamburger.open div:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+        #hamburger.open div:nth-child(2) {
+            opacity: 0;
+        }
+        #hamburger.open div:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        /* Sidomeny */
+        #side-menu {
+            position: fixed;
+            top: 0;
+            left: -250px; /* gömd utanför skärmen */
+            width: 250px;
+            height: 100%;
+            background-color: #1e1e1e;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.5);
+            padding: 2rem 1rem;
+            box-sizing: border-box;
+            transition: left 0.3s ease;
+            z-index: 1000;
+        }
+        #side-menu.open {
+            left: 0;
+        }
+        #side-menu h2 {
+            margin-top: 0;
+            color: #ccc;
             font-weight: normal;
+        }
+        #side-menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 1rem 0 0 0;
+        }
+        #side-menu ul li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #444;
+            cursor: pointer;
+            color: #aaa;
+            user-select: none;
+        }
+        #side-menu ul li:hover {
             color: white;
         }
+
+        h1 {
+            margin: 2rem 0 1rem 0;
+            font-weight: normal;
+            color: white;
+            user-select: none;
+        }
+
         #input-area {
             display: flex;
             width: 100%;
@@ -52,7 +122,7 @@
             outline: none;
             background-color: #3a3a3a;
             color: white;
-            user-select: text; /* tillåt markering i input */
+            user-select: text;
         }
         #add-btn {
             background-color: #28a745;
@@ -74,7 +144,7 @@
             max-width: 500px;
             background-color: #3a3a3a;
             border-radius: 8px;
-            max-height: 60vh; /* max höjd och scroll */
+            max-height: 60vh;
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
             user-select: none;
@@ -105,6 +175,7 @@
         ul#task-list li span.task-text {
             flex-grow: 1;
             margin-left: 0.5rem;
+            text-align: left;
         }
 
         ul#task-list li input[type="checkbox"] {
@@ -150,6 +221,23 @@
     </style>
 </head>
 <body>
+
+    <div id="hamburger" aria-label="Meny" role="button" tabindex="0">
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+
+    <nav id="side-menu" aria-hidden="true">
+        <h2>Menyn</h2>
+        <ul>
+            <li>Funktion 1</li>
+            <li>Funktion 2</li>
+            <li>Funktion 3</li>
+            <!-- Lägg till fler saker här senare -->
+        </ul>
+    </nav>
+
     <h1>Checklista</h1>
 
     <div id="input-area">
@@ -168,6 +256,9 @@
         const taskList = document.getElementById('task-list');
         const clearBtn = document.getElementById('clear-btn');
         const taskListContainer = document.getElementById('task-list-container');
+
+        const hamburger = document.getElementById('hamburger');
+        const sideMenu = document.getElementById('side-menu');
 
         function addTask(text) {
             const li = document.createElement('li');
@@ -220,19 +311,4 @@
 
         // Förhindra scroll på hela sidan men tillåt scroll i listan
         document.addEventListener('touchmove', function(e) {
-            // Om eventet kommer från task-list-container eller dess barn: tillåt scroll
-            if (taskListContainer.contains(e.target)) {
-                return;
-            }
-            e.preventDefault();
-        }, { passive: false });
-
-        document.addEventListener('wheel', function(e) {
-            if (taskListContainer.contains(e.target)) {
-                return;
-            }
-            e.preventDefault();
-        }, { passive: false });
-    </script>
-</body>
-</html>
+            if (taskListContainer.contains(e.target) || sideMenu
