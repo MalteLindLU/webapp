@@ -6,11 +6,13 @@
 <title>Checklista App</title>
 
 <style>
+  /* Hela sidan och html bakgrund och låsning */
   html, body {
     height: 100%;
-    margin: 0; padding: 0;
-    overflow: hidden; /* Lås hela sidan så den inte scrollar */
-    background-color: #121212;
+    margin: 0; 
+    padding: 0;
+    overflow: hidden; /* Inget scroll alls */
+    background-color: #1e1e1e; /* Mörkgrå bakgrund hela sidan */
     color: white;
     font-family: Arial, sans-serif;
   }
@@ -19,17 +21,19 @@
     justify-content: center;
     align-items: flex-start;
   }
+
+  /* Container med samma bakgrund som sidan */
   .container {
     margin-top: 2rem;
     width: 90vw;
     max-width: 500px;
-    background: #1e1e1e;
+    background: #1e1e1e; /* Samma mörkgrå som sidan */
     border-radius: 10px;
     box-shadow: 0 0 15px rgba(0,0,0,0.7);
     padding: 1.5rem 1.5rem 1rem 1.5rem;
     display: flex;
     flex-direction: column;
-    max-height: 80vh; /* maxhöjd på containern */
+    max-height: 80vh;
   }
   h1 {
     margin: 0 0 1rem 0;
@@ -56,7 +60,7 @@
   }
   input::placeholder {
     color: #d0f0d0;
-    text-align: left; /* vänsterjusterad placeholder */
+    text-align: left;
   }
   input:focus {
     background-color: #45a047;
@@ -76,7 +80,7 @@
     background-color: #45a047;
   }
 
-  /* Scrollbar på listbox */
+  /* Listan scrollas bara */
   ul {
     list-style: none;
     margin: 0;
@@ -85,7 +89,7 @@
     border-radius: 6px;
     border: 1px solid #333;
     overflow-y: auto;
-    max-height: 50vh; /* maxhöjd på listan, scrollas här */
+    max-height: 50vh;
   }
   li {
     display: flex;
