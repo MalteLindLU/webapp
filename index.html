@@ -1,220 +1,238 @@
 <!DOCTYPE html>
 <html lang="sv">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-<title>Checklista App</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <title>Checklista App</title>
 
-<style>
-  /* Hela sidan och html bakgrund och låsning */
-  html, body {
-    height: 100%;
-    margin: 0; 
-    padding: 0;
-    overflow: hidden; /* Inget scroll alls */
-    background-color: #1e1e1e; /* Mörkgrå bakgrund hela sidan */
-    color: white;
-    font-family: Arial, sans-serif;
-  }
-  body {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-  }
+    <!-- Manifest och mobiloptimering -->
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#2c2c2c" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <link rel="apple-touch-icon" href="icon-192.png" />
 
-  /* Container med samma bakgrund som sidan */
-  .container {
-    margin-top: 2rem;
-    width: 90vw;
-    max-width: 500px;
-    background: #1e1e1e; /* Samma mörkgrå som sidan */
-    border-radius: 10px;
-    box-shadow: 0 0 15px rgba(0,0,0,0.7);
-    padding: 1.5rem 1.5rem 1rem 1.5rem;
-    display: flex;
-    flex-direction: column;
-    max-height: 80vh;
-  }
-  h1 {
-    margin: 0 0 1rem 0;
-    text-align: center;
-    user-select: none;
-  }
-  .input-area {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-  }
-  input {
-    flex-grow: 1;
-    font-size: 1rem;
-    padding: 0.5rem 0.75rem;
-    border-radius: 6px;
-    border: none;
-    outline: none;
-    background-color: #4caf50; /* grön som knappen */
-    color: white;
-    text-align: left; /* vänsterjusterad text */
-    caret-color: white;
-    transition: background-color 0.3s ease;
-  }
-  input::placeholder {
-    color: #d0f0d0;
-    text-align: left;
-  }
-  input:focus {
-    background-color: #45a047;
-  }
-  button.add-btn {
-    background-color: #4caf50;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    padding: 0 1rem;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    user-select: none;
-  }
-  button.add-btn:hover {
-    background-color: #45a047;
-  }
+    <style>
+        html, body {
+            margin: 0; padding: 0;
+            height: 100%;
+            background-color: #2c2c2c;
+            font-family: Arial, sans-serif;
+            color: white;
+            overflow: hidden; /* Lås scroll på hela sidan */
+            -webkit-user-select: none; /* Inaktivera markering för att minska oväntade drag */
+            user-select: none;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 1rem;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent; /* ta bort highlight vid klick på iPhone */
+        }
+        h1 {
+            margin-bottom: 1rem;
+            font-weight: normal;
+            color: white;
+        }
+        #input-area {
+            display: flex;
+            width: 100%;
+            max-width: 500px;
+            margin-bottom: 1rem;
+        }
+        #new-task {
+            flex-grow: 1;
+            font-size: 1rem;
+            padding: 0.5rem;
+            border: none;
+            border-radius: 6px 0 0 6px;
+            outline: none;
+            background-color: #3a3a3a;
+            color: white;
+            user-select: text; /* tillåt markering i input */
+        }
+        #add-btn {
+            background-color: #28a745;
+            border: none;
+            padding: 0 1rem;
+            cursor: pointer;
+            font-size: 1rem;
+            color: white;
+            border-radius: 0 6px 6px 0;
+            user-select: none;
+            transition: background-color 0.3s;
+        }
+        #add-btn:hover {
+            background-color: #218838;
+        }
 
-  /* Listan scrollas bara */
-  ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    background-color: #2a2a2a;
-    border-radius: 6px;
-    border: 1px solid #333;
-    overflow-y: auto;
-    max-height: 50vh;
-  }
-  li {
-    display: flex;
-    align-items: center;
-    padding: 0.75rem 1rem;
-    border-bottom: 1px solid #444;
-    color: #eee;
-    font-size: 1rem;
-    user-select: none;
-    transition: background-color 0.2s ease;
-  }
-  li:last-child {
-    border-bottom: none;
-  }
-  li.completed {
-    color: #999;
-    text-decoration: line-through;
-  }
-  li input[type="checkbox"] {
-    margin-right: 1rem;
-    transform: scale(1.3);
-    cursor: pointer;
-  }
-  li .task-text {
-    flex-grow: 1;
-  }
-  li button.delete-btn {
-    background-color: transparent;
-    border: none;
-    color: #e74c3c;
-    font-weight: bold;
-    font-size: 1.2rem;
-    cursor: pointer;
-    padding: 0 0.5rem;
-    transition: color 0.2s ease;
-    user-select: none;
-  }
-  li button.delete-btn:hover {
-    color: #c0392b;
-  }
-  button.clear-btn {
-    margin-top: 0.5rem;
-    background-color: #e74c3c;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    padding: 0.75rem 0;
-    font-size: 1rem;
-    cursor: pointer;
-    user-select: none;
-    transition: background-color 0.3s ease;
-    width: 100%;
-    flex-shrink: 0;
-  }
-  button.clear-btn:hover {
-    background-color: #c0392b;
-  }
-</style>
+        #task-list-container {
+            width: 100%;
+            max-width: 500px;
+            background-color: #3a3a3a;
+            border-radius: 8px;
+            max-height: 60vh; /* max höjd och scroll */
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            user-select: none;
+            box-sizing: border-box;
+            padding: 0.5rem 1rem;
+        }
+
+        ul#task-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        ul#task-list li {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.6rem 0;
+            border-bottom: 1px solid #505050;
+            color: white;
+            user-select: text;
+        }
+        ul#task-list li.completed span.task-text {
+            text-decoration: line-through;
+            color: #888;
+        }
+
+        ul#task-list li span.task-text {
+            flex-grow: 1;
+            margin-left: 0.5rem;
+        }
+
+        ul#task-list li input[type="checkbox"] {
+            transform: scale(1.3);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        ul#task-list li button.delete-btn {
+            background-color: #dc3545;
+            border: none;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+            padding: 0 8px;
+            margin-left: 1rem;
+            user-select: none;
+            transition: background-color 0.3s;
+        }
+        ul#task-list li button.delete-btn:hover {
+            background-color: #b02a37;
+        }
+
+        #clear-btn {
+            margin-top: 0.75rem;
+            background-color: #dc3545;
+            border: none;
+            color: white;
+            font-size: 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            user-select: none;
+            transition: background-color 0.3s;
+            width: 100%;
+            max-width: 500px;
+            box-sizing: border-box;
+        }
+        #clear-btn:hover {
+            background-color: #b02a37;
+        }
+    </style>
 </head>
 <body>
-  <div class="container" role="main">
     <h1>Checklista</h1>
-    <div class="input-area">
-      <input type="text" id="new-task" placeholder="Skriv en punkt..." aria-label="Ny punkt" autocomplete="off" />
-      <button class="add-btn" id="add-btn" aria-label="Lägg till punkt">Lägg till</button>
+
+    <div id="input-area">
+        <input type="text" id="new-task" placeholder="Skriv en punkt..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+        <button id="add-btn">Lägg till</button>
     </div>
-    <ul id="task-list" aria-live="polite" aria-label="Lista med punkter"></ul>
-    <button class="clear-btn" id="clear-btn" aria-label="Rensa alla punkter">Rensa</button>
-  </div>
 
-  <script>
-    const addBtn = document.getElementById('add-btn');
-    const newTaskInput = document.getElementById('new-task');
-    const taskList = document.getElementById('task-list');
-    const clearBtn = document.getElementById('clear-btn');
+    <div id="task-list-container">
+        <ul id="task-list"></ul>
+        <button id="clear-btn">Rensa</button>
+    </div>
 
-    function createTaskItem(text) {
-      const li = document.createElement('li');
-      const checkbox = document.createElement('input');
-      checkbox.type = 'checkbox';
-      checkbox.setAttribute('aria-label', 'Markera som klar');
+    <script>
+        const addBtn = document.getElementById('add-btn');
+        const newTaskInput = document.getElementById('new-task');
+        const taskList = document.getElementById('task-list');
+        const clearBtn = document.getElementById('clear-btn');
+        const taskListContainer = document.getElementById('task-list-container');
 
-      checkbox.addEventListener('change', () => {
-        li.classList.toggle('completed', checkbox.checked);
-      });
+        function addTask(text) {
+            const li = document.createElement('li');
 
-      const span = document.createElement('span');
-      span.textContent = text;
-      span.className = 'task-text';
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
 
-      const deleteBtn = document.createElement('button');
-      deleteBtn.textContent = '×';
-      deleteBtn.className = 'delete-btn';
-      deleteBtn.setAttribute('aria-label', 'Ta bort punkt');
-      deleteBtn.addEventListener('click', () => {
-        taskList.removeChild(li);
-      });
+            const span = document.createElement('span');
+            span.className = 'task-text';
+            span.textContent = text;
 
-      li.appendChild(checkbox);
-      li.appendChild(span);
-      li.appendChild(deleteBtn);
+            checkbox.addEventListener('change', () => {
+                li.classList.toggle('completed', checkbox.checked);
+            });
 
-      return li;
-    }
+            const deleteBtn = document.createElement('button');
+            deleteBtn.className = 'delete-btn';
+            deleteBtn.textContent = '×';
+            deleteBtn.title = 'Ta bort';
 
-    function addTask() {
-      const taskText = newTaskInput.value.trim();
-      if (taskText === '') return;
-      const taskItem = createTaskItem(taskText);
-      taskList.appendChild(taskItem);
-      newTaskInput.value = '';
-      newTaskInput.focus();
-    }
+            deleteBtn.addEventListener('click', () => {
+                taskList.removeChild(li);
+            });
 
-    addBtn.addEventListener('click', addTask);
-    newTaskInput.addEventListener('keyup', (e) => {
-      if (e.key === 'Enter') {
-        addTask();
-      }
-    });
+            li.appendChild(checkbox);
+            li.appendChild(span);
+            li.appendChild(deleteBtn);
 
-    clearBtn.addEventListener('click', () => {
-      taskList.innerHTML = '';
-      newTaskInput.focus();
-    });
-  </script>
+            taskList.appendChild(li);
+        }
+
+        addBtn.addEventListener('click', () => {
+            const taskText = newTaskInput.value.trim();
+            if (taskText === '') return;
+            addTask(taskText);
+            newTaskInput.value = '';
+            newTaskInput.focus();
+        });
+
+        newTaskInput.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') {
+                addBtn.click();
+            }
+        });
+
+        clearBtn.addEventListener('click', () => {
+            taskList.innerHTML = '';
+            newTaskInput.focus();
+        });
+
+        // Förhindra scroll på hela sidan men tillåt scroll i listan
+        document.addEventListener('touchmove', function(e) {
+            // Om eventet kommer från task-list-container eller dess barn: tillåt scroll
+            if (taskListContainer.contains(e.target)) {
+                return;
+            }
+            e.preventDefault();
+        }, { passive: false });
+
+        document.addEventListener('wheel', function(e) {
+            if (taskListContainer.contains(e.target)) {
+                return;
+            }
+            e.preventDefault();
+        }, { passive: false });
+    </script>
 </body>
 </html>
