@@ -74,21 +74,10 @@
       background-color: #00b04c;
     }
 
-    #clear-btn {
-      background-color: #d32f2f;
-      color: #fff;
-      margin-top: auto;
-      margin-top: 1rem;
-    }
-
-    #clear-btn:hover {
-      background-color: #b71c1c;
-    }
-
-    #task-list {
+    .list-container {
       flex: 1;
       overflow-y: auto;
-      max-height: 60vh;
+      margin-bottom: 1rem;
       padding-right: 4px;
     }
 
@@ -138,6 +127,23 @@
     .remove-btn:hover {
       color: #e53935;
     }
+
+    #clear-btn {
+      background-color: #d32f2f;
+      color: #fff;
+      width: 100%;
+    }
+
+    #clear-btn:hover {
+      background-color: #b71c1c;
+    }
+
+    /* Förhindra att hela sidan scrollar när tangentbordet dyker upp */
+    @media (max-height: 600px) {
+      .container {
+        height: 100svh;
+      }
+    }
   </style>
 </head>
 <body>
@@ -147,7 +153,9 @@
       <input type="text" id="new-task" placeholder="Skriv en punkt..." />
       <button id="add-btn">Lägg till</button>
     </div>
-    <ul id="task-list"></ul>
+    <div class="list-container">
+      <ul id="task-list"></ul>
+    </div>
     <button id="clear-btn">Rensa alla</button>
   </div>
 
