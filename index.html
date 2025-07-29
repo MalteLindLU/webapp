@@ -1,82 +1,115 @@
 <!DOCTYPE html>
 <html lang="sv">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Checklista</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Checklista App</title>
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-      max-width: 500px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    input[type="text"] {
-      width: 70%;
-      padding: 10px;
-      font-size: 1.2em;
-      box-sizing: border-box;
-    }
-    button {
-      padding: 10px 15px;
-      font-size: 1.2em;
-      margin-left: 10px;
-      cursor: pointer;
-      background-color: #4CAF50;
-      border: none;
-      color: white;
-      border-radius: 4px;
-    }
-    ul {
-      list-style: none;
-      padding-left: 0;
-      margin-top: 20px;
-    }
-    li {
-      cursor: pointer;
-      padding: 10px;
-      font-size: 1.3em;
-      border-bottom: 1px solid #ccc;
-      user-select: none;
-    }
-    li.checked {
-      text-decoration: line-through;
-      color: gray;
-    }
-  </style>
+    <!-- Manifest och mobiloptimering -->
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#007BFF" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <link rel="apple-touch-icon" href="icon-192.png" />
 
-  <link rel="manifest" href="manifest.json" />
-  <meta name="theme-color" content="#4CAF50" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2245%22 fill=%22%234CAF50%22 /><path d=%22M30 55 L45 70 L70 35%22 stroke=%22white%22 stroke-width=%228%22 fill=%22none%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22 /></svg>" />
-
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0; padding: 0;
+            background-color: #f0f4f8;
+        }
+        .container {
+            max-width: 500px;
+            margin: 1rem auto;
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #007BFF;
+        }
+        input, button {
+            font-size: 1rem;
+            padding: 0.5rem;
+        }
+        input {
+            width: 70%;
+            margin-right: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 25%;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+        }
+        li.completed {
+            text-decoration: line-through;
+            color: gray;
+        }
+        li input[type="checkbox"] {
+            margin-right: 0.75rem;
+            transform: scale(1.2);
+        }
+    </style>
 </head>
 <body>
-  <h1>Checklista</h1>
-  <input id="input" type="text" placeholder="Skriv en punkt här..." />
-  <button onclick="addItem()">Lägg till</button>
-  <ul id="checklist"></ul>
+    <div class="container">
+        <h1>Checklista App</h1>
+        <input type="text" id="new-task" placeholder="Skriv en punkt..." />
+        <button id="add-btn">Lägg till</button>
+        <ul id="task-list"></ul>
+    </div>
 
-  <script>
-    const input = document.getElementById("input");
-    const checklist = document.getElementById("checklist");
+    <script>
+        const addBtn = document.getElementById('add-btn');
+        const newTaskInput = document.getElementById('new-task');
+        const taskList = document.getElementById('task-list');
 
-    function addItem() {
-      const text = input.value.trim();
-      if (text === "") return;
-      const li = document.createElement("li");
-      li.textContent = text;
-      li.onclick = () => li.classList.toggle("checked");
-      checklist.appendChild(li);
-      input.value = "";
-      input.focus();
-    }
+        addBtn.addEventListener('click', () => {
+            const taskText = newTaskInput.value.trim();
+            if (taskText === '') return;
 
-    // Lägg till med Enter
-    input.addEventListener("keydown", e => {
-      if (e.key === "Enter") addItem();
-    });
-  </script>
+            const li = document.createElement('li');
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+
+            checkbox.addEventListener('change', () => {
+                li.classList.toggle('completed', checkbox.checked);
+            });
+
+            li.appendChild(checkbox);
+            li.appendChild(document.createTextNode(taskText));
+            taskList.appendChild(li);
+
+            newTaskInput.value = '';
+            newTaskInput.focus();
+        });
+
+        // Spara med Enter också
+        newTaskInput.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') {
+                addBtn.click();
+            }
+        });
+    </script>
 </body>
 </html>
