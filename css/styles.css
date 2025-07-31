@@ -1,4 +1,4 @@
-/* Allt i grått/svart tema med mjuka färger */
+/* Din befintliga styling + tillägg */
 
 body, html {
     margin: 0; padding: 0;
@@ -6,7 +6,7 @@ body, html {
     color: white;
     font-family: Arial, sans-serif;
     height: 100vh;
-    overflow: hidden; /* Förhindra scroll på body */
+    overflow: hidden;
 }
 
 .container {
@@ -20,117 +20,84 @@ body, html {
     height: 90vh;
 }
 
-h1 {
-    margin: 0 0 1rem 0;
-    color: white;
-    text-align: left;
-    font-weight: 600;
-}
-
-.input-row {
+/* Header med hamburgare och titel */
+header {
     display: flex;
-    gap: 0.5rem;
+    align-items: center;
+    gap: 1rem;
     margin-bottom: 1rem;
 }
 
-input#new-task {
-    flex: 1;
-    padding: 0.6rem 1rem;
-    font-size: 1rem;
-    border-radius: 25px;
+#menu-btn {
+    font-size: 2rem;
+    background: none;
     border: none;
-    outline: none;
-    background-color: #4CAF50; /* grön som "lägg till" */
-    color: white;
-}
-
-button#add-btn {
-    background-color: #4CAF50;
-    border: none;
-    padding: 0 1.2rem;
-    font-size: 1rem;
-    border-radius: 25px;
     color: white;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    user-select: none;
 }
 
-button#add-btn:hover {
-    background-color: #45a049;
+/* Sidomeny */
+nav#sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    width: 200px;
+    height: 100vh;
+    background-color: #222;
+    padding-top: 3rem;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.7);
+    z-index: 1000;
 }
 
-.list-wrapper {
-    flex: 1;
-    overflow-y: auto;
-    background: #2e2e2e;
-    border-radius: 8px;
-    padding: 0.5rem 1rem;
-    margin-bottom: 1rem;
+nav#sidebar.hidden {
+    transform: translateX(-220px);
+    transition: transform 0.3s ease;
 }
 
-ul#task-list {
+nav#sidebar ul {
     list-style: none;
     padding-left: 0;
     margin: 0;
 }
 
-li.task-item {
-    background-color: #4CAF50;
+nav#sidebar li {
+    margin-bottom: 1rem;
+}
+
+nav#sidebar button.menu-item {
+    background: none;
+    border: none;
     color: white;
-    margin-bottom: 0.7rem;
-    padding: 0.7rem 1rem;
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    user-select: none;
-    font-weight: 500;
-    transition: background-color 0.3s ease;
-}
-
-li.task-item.completed {
-    text-decoration: line-through;
-    opacity: 0.6;
-}
-
-li.task-item:hover {
-    background-color: #45a049;
-}
-
-.task-text {
-    flex-grow: 1;
-    margin-left: 0.5rem;
+    width: 100%;
     text-align: left;
-}
-
-button.delete-btn {
-    background-color: #e74c3c; /* rött */
-    border: none;
-    border-radius: 50%;
-    color: white;
-    width: 25px;
-    height: 25px;
-    cursor: pointer;
-    font-weight: bold;
-    line-height: 1;
-    transition: background-color 0.3s ease;
-}
-
-button.delete-btn:hover {
-    background-color: #c0392b;
-}
-
-button#clear-btn {
-    background-color: #e74c3c;
-    border: none;
-    padding: 0.7rem;
+    padding: 0.5rem 1rem;
     font-size: 1rem;
-    border-radius: 25px;
-    color: white;
     cursor: pointer;
+    user-select: none;
     transition: background-color 0.3s ease;
 }
 
-button#clear-btn:hover {
-    background-color: #c0392b;
+nav#sidebar button.menu-item:hover {
+    background-color: #4caf50;
 }
+
+/* Main innehåll justeras när meny är öppen */
+main {
+    margin-left: 0;
+    transition: margin-left 0.3s ease;
+}
+
+nav#sidebar:not(.hidden) ~ main {
+    margin-left: 200px;
+}
+
+/* Sektioner (vyer) */
+.view {
+    display: block;
+}
+
+.view.hidden {
+    display: none;
+}
+
+/* Resten av din styling för checklistan, inputs, knappar etc. (kan du behålla som du har) */

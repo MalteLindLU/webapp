@@ -1,3 +1,35 @@
+const menuBtn = document.getElementById('menu-btn');
+const sidebar = document.getElementById('sidebar');
+const menuItems = document.querySelectorAll('button.menu-item');
+const views = document.querySelectorAll('section.view');
+
+menuBtn.addEventListener('click', () => {
+    sidebar.classList.toggle('hidden');
+});
+
+// Visa valt vy och göm resten
+function showView(viewId) {
+    views.forEach(view => {
+        if(view.id === viewId) {
+            view.classList.remove('hidden');
+        } else {
+            view.classList.add('hidden');
+        }
+    });
+    // Stäng menyn automatiskt vid val (bra för mobiler)
+    sidebar.classList.add('hidden');
+}
+
+// Lyssna på menyval
+menuItems.forEach(btn => {
+    btn.addEventListener('click', () => {
+        const viewId = btn.getAttribute('data-view');
+        showView(viewId);
+    });
+});
+
+// --- Din checklistkod här ---
+
 const addBtn = document.getElementById('add-btn');
 const newTaskInput = document.getElementById('new-task');
 const taskList = document.getElementById('task-list');
@@ -59,5 +91,4 @@ clearBtn.addEventListener('click', () => {
     updateClearBtnVisibility();
 });
 
-// Starta med rensa-knappen gömd om inga punkter
 updateClearBtnVisibility();
