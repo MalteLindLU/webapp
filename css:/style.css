@@ -1,131 +1,136 @@
-/* Grundinställningar */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  body, html {
-    height: 100%;
-    font-family: sans-serif;
-    background-color: #1c1c1c;
+/* Allt i grått/svart tema med mjuka färger */
+
+body, html {
+    margin: 0; padding: 0;
+    background-color: #2c2c2c;
     color: white;
-    overflow: hidden;
-  }
-  
-  /* Layout */
-  #app {
+    font-family: Arial, sans-serif;
+    height: 100vh;
+    overflow: hidden; /* Förhindra scroll på body */
+}
+
+.container {
+    max-width: 500px;
+    margin: 1rem auto;
+    background: #3a3a3a;
+    border-radius: 10px;
+    padding: 1.5rem;
     display: flex;
     flex-direction: column;
-    height: 100%;
-  }
-  header {
-    background-color: #2b2b2b;
-    padding: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-  #menu-btn {
-    font-size: 1.5rem;
-    background: none;
-    border: none;
+    height: 90vh;
+}
+
+h1 {
+    margin: 0 0 1rem 0;
     color: white;
-  }
-  h1 {
-    font-size: 1.5rem;
-  }
-  
-  /* Sidomeny */
-  #sidebar {
-    position: fixed;
-    top: 0;
-    left: -200px;
-    width: 200px;
-    height: 100%;
-    background-color: #333;
-    padding: 1rem;
-    transition: left 0.3s;
-    z-index: 100;
-  }
-  #sidebar ul {
-    list-style: none;
-  }
-  #sidebar li {
-    margin: 1rem 0;
-    cursor: pointer;
-  }
-  
-  /* Main-innehåll */
-  main {
-    flex: 1;
-    padding: 1rem;
-    overflow-y: auto;
-  }
-  
-  /* Sektioner */
-  .section {
-    display: none;
-  }
-  .section.visible {
-    display: block;
-  }
-  
-  /* Formulär */
-  form {
+    text-align: left;
+    font-weight: 600;
+}
+
+.input-row {
     display: flex;
     gap: 0.5rem;
     margin-bottom: 1rem;
-  }
-  input[type="text"] {
+}
+
+input#new-task {
     flex: 1;
-    padding: 0.6rem;
-    font-size: 1rem;
-    border: none;
-    border-radius: 5px;
-  }
-  button {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
     padding: 0.6rem 1rem;
     font-size: 1rem;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  #clear-btn {
-    background-color: #e74c3c;
-    margin-top: 1rem;
-  }
-  
-  /* Checklista */
-  #checklist-items {
-    max-height: 50vh;
-    overflow-y: auto;
-    padding-right: 0.5rem;
-  }
-  #checklist-items li {
-    background-color: #333;
-    padding: 0.5rem;
-    margin-bottom: 0.5rem;
-    border-radius: 5px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  #checklist-items li.checked {
-    background-color: #4CAF50;
-  }
-  #checklist-items span {
-    flex: 1;
-    text-align: left;
-  }
-  .remove-btn {
-    background-color: #e74c3c;
-    color: white;
+    border-radius: 25px;
     border: none;
-    padding: 0.2rem 0.6rem;
-    margin-left: 1rem;
-    border-radius: 4px;
+    outline: none;
+    background-color: #4CAF50; /* grön som "lägg till" */
+    color: white;
+}
+
+button#add-btn {
+    background-color: #4CAF50;
+    border: none;
+    padding: 0 1.2rem;
+    font-size: 1rem;
+    border-radius: 25px;
+    color: white;
     cursor: pointer;
-  }
-  
+    transition: background-color 0.3s ease;
+}
+
+button#add-btn:hover {
+    background-color: #45a049;
+}
+
+.list-wrapper {
+    flex: 1;
+    overflow-y: auto;
+    background: #2e2e2e;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    margin-bottom: 1rem;
+}
+
+ul#task-list {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+li.task-item {
+    background-color: #4CAF50;
+    color: white;
+    margin-bottom: 0.7rem;
+    padding: 0.7rem 1rem;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    user-select: none;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+
+li.task-item.completed {
+    text-decoration: line-through;
+    opacity: 0.6;
+}
+
+li.task-item:hover {
+    background-color: #45a049;
+}
+
+.task-text {
+    flex-grow: 1;
+    margin-left: 0.5rem;
+    text-align: left;
+}
+
+button.delete-btn {
+    background-color: #e74c3c; /* rött */
+    border: none;
+    border-radius: 50%;
+    color: white;
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+    font-weight: bold;
+    line-height: 1;
+    transition: background-color 0.3s ease;
+}
+
+button.delete-btn:hover {
+    background-color: #c0392b;
+}
+
+button#clear-btn {
+    background-color: #e74c3c;
+    border: none;
+    padding: 0.7rem;
+    font-size: 1rem;
+    border-radius: 25px;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button#clear-btn:hover {
+    background-color: #c0392b;
+}

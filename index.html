@@ -1,46 +1,33 @@
 <!DOCTYPE html>
 <html lang="sv">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Maltes App</title>
-  <link rel="manifest" href="manifest.json">
-  <link rel="stylesheet" href="css/style.css" />
-  <script src="js/script.js" defer></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <title>Checklista App</title>
+
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#2c2c2c" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <link rel="apple-touch-icon" href="icon-192.png" />
 </head>
 <body>
-  <div id="app">
-    <header>
-      <button id="menu-btn">&#9776;</button>
-      <h1>Maltes app</h1>
-    </header>
+    <div class="container">
+        <h1>Checklista</h1>
 
-    <nav id="sidebar">
-      <ul>
-        <li onclick="showSection('home')">🏠 Startsida</li>
-        <li onclick="showSection('checklist')">✅ Checklista</li>
-        <li>📁 xxx</li>
-        <li>📁 xxx</li>
-      </ul>
-    </nav>
+        <div class="input-row">
+            <input type="text" id="new-task" placeholder="Skriv en punkt..." autocomplete="off" />
+            <button id="add-btn">Lägg till</button>
+        </div>
 
-    <main>
-      <section id="home" class="section visible">
-        <h2>Hej och välkommen till Maltes app</h2>
-        <p>Välj ett alternativ i menyn!</p>
-      </section>
+        <div class="list-wrapper">
+            <ul id="task-list"></ul>
+        </div>
 
-      <section id="checklist" class="section">
-        <form id="checklist-form">
-          <input type="text" id="item-input" placeholder="Lägg till punkt..." autocomplete="off" />
-          <button type="submit">Lägg till</button>
-        </form>
+        <button id="clear-btn">Rensa</button>
+    </div>
 
-        <ul id="checklist-items"></ul>
-
-        <button id="clear-btn">Rensa alla</button>
-      </section>
-    </main>
-  </div>
+    <script src="app.js"></script>
 </body>
 </html>
