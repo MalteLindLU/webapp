@@ -1,59 +1,58 @@
 <!DOCTYPE html>
 <html lang="sv">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-    <title>Maltes App</title>
-    <link rel="stylesheet" href="css/styles.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Maltes App</title>
+  <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
-    <div class="container">
+  <div class="menu-icon" id="menu-icon">&#9776;</div>
 
-        <header>
-            <button id="menu-btn" aria-label="Öppna meny">&#9776;</button>
-            <h1>Maltes App</h1>
-        </header>
+  <div class="sidebar" id="sidebar">
+    <a href="#" onclick="showSection('checklist')">Checklista</a>
+    <a href="#" onclick="showSection('salary-calculator')">Lönekalkylator</a>
+    <a href="#">Kommer snart</a>
+  </div>
 
-        <nav id="sidebar" class="hidden">
-            <ul>
-                <li><button class="menu-item" data-view="welcome">Välkommen</button></li>
-                <li><button class="menu-item" data-view="checklist">Checklista</button></li>
-                <li><button class="menu-item" data-view="xxx">XXX</button></li>
-                <li><button class="menu-item" data-view="yyy">YYY</button></li>
-            </ul>
-        </nav>
+  <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
 
-        <main>
-            <section id="welcome" class="view">
-                <h2>Välkommen till Maltes app</h2>
-                <p>Vad vill du göra?</p>
-            </section>
+  <div class="container" id="start-screen">
+    <h1>Välkommen till Maltes App</h1>
+    <p>Vad vill du göra?</p>
+    <button onclick="startApp('checklist')">Checklista</button>
+    <button onclick="startApp('salary-calculator')">Lönekalkylator</button>
+    <button onclick="startApp('coming-soon')">Kommer snart</button>
+  </div>
 
-            <section id="checklist" class="view hidden">
-                <div class="input-row">
-                    <input type="text" id="new-task" placeholder="Skriv en punkt..." autocomplete="off" />
-                    <button id="add-btn">Lägg till</button>
-                </div>
-
-                <div class="list-wrapper">
-                    <ul id="task-list"></ul>
-                </div>
-
-                <button id="clear-btn">Rensa</button>
-            </section>
-
-            <section id="xxx" class="view hidden">
-                <h2>XXX</h2>
-                <p>Inget innehåll ännu.</p>
-            </section>
-
-            <section id="yyy" class="view hidden">
-                <h2>YYY</h2>
-                <p>Inget innehåll ännu.</p>
-            </section>
-        </main>
+  <!-- Checklista -->
+  <div class="container" id="checklist" style="display: none;">
+    <h1>Checklista</h1>
+    <div class="input-row">
+      <input type="text" id="new-task" placeholder="Ny uppgift..." />
+      <button id="add-btn">+</button>
     </div>
+    <div class="list-wrapper">
+      <ul id="task-list"></ul>
+    </div>
+    <button id="clear-btn">Rensa lista</button>
+  </div>
 
-    <script src="js/app.js"></script>
+  <!-- Lönekalkylator -->
+  <div class="container" id="salary-calculator" style="display: none;">
+    <h1>Lönekalkylator</h1>
+    <form id="calc-form">
+      <label>Datum: <input type="date" id="work-date" required /></label><br /><br />
+      <label>Starttid: <input type="time" id="start-time" required /></label><br /><br />
+      <label>Sluttid: <input type="time" id="end-time" required /></label><br /><br />
+      <label>Rast från: <input type="time" id="break-start" required /></label><br /><br />
+      <label>Rast till: <input type="time" id="break-end" required /></label><br /><br />
+      <label>Timlön (kr/h): <input type="number" id="hourly-wage" required /></label><br /><br />
+      <button type="submit">Beräkna</button>
+    </form>
+    <div id="result" style="margin-top: 1rem;"></div>
+  </div>
+
+  <script src="js/app.js"></script>
 </body>
 </html>

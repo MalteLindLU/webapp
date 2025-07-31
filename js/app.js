@@ -1,94 +1,94 @@
-const menuBtn = document.getElementById('menu-btn');
-const sidebar = document.getElementById('sidebar');
-const menuItems = document.querySelectorAll('button.menu-item');
-const views = document.querySelectorAll('section.view');
-
-menuBtn.addEventListener('click', () => {
-    sidebar.classList.toggle('hidden');
-});
-
-// Visa valt vy och göm resten
-function showView(viewId) {
-    views.forEach(view => {
-        if(view.id === viewId) {
-            view.classList.remove('hidden');
-        } else {
-            view.classList.add('hidden');
-        }
+// Startskärm
+function startApp(sectionId) {
+    document.getElementById("start-screen").style.display = "none";
+    document.getElementById("menu-icon").style.display = "block";
+    showSection(sectionId);
+  }
+  
+  // Visa en sektion, dölj de andra
+  function showSection(sectionId) {
+    ["checklist", "salary-calculator"].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = (id === sectionId) ? "flex" : "none";
     });
-    // Stäng menyn automatiskt vid val (bra för mobiler)
-    sidebar.classList.add('hidden');
-}
-
-// Lyssna på menyval
-menuItems.forEach(btn => {
-    btn.addEventListener('click', () => {
-        const viewId = btn.getAttribute('data-view');
-        showView(viewId);
+    toggleSidebar(false);
+  }
+  
+  // Meny
+  function toggleSidebar(force) {
+    const sidebar = document.getElementById("sidebar");
+    const overlay = document.getElementById("overlay");
+  
+    if (force === false) {
+      sidebar.style.left = "-200px";
+      overlay.style.display = "none";
+      return;
+    }
+  
+    const open = sidebar.style.left === "0px";
+    sidebar.style.left = open ? "-200px" : "0px";
+    overlay.style.display = open ? "none" : "block";
+  }
+  
+  document.getElementById("menu-icon").addEventListener("click", toggleSidebar);
+  document.getElementById("overlay").addEventListener("click", () => toggleSidebar(false));
+  
+  // Checklista
+  document.getElementById("add-btn").addEventListener("click", () => {
+    const input = document.getElementById("new-task");
+    const text = input.value.trim();
+    if (text === "") return;
+  
+    const li = document.createElement("li");
+    li.className = "task-item";
+    li.innerHTML = `<span class="task-text">${text}</span> <button class="delete-btn">x</button>`;
+    li.querySelector(".task-text").addEventListener("click", () => {
+      li.classList.toggle("completed");
     });
-});
-
-// --- Din checklistkod här ---
-
-const addBtn = document.getElementById('add-btn');
-const newTaskInput = document.getElementById('new-task');
-const taskList = document.getElementById('task-list');
-const clearBtn = document.getElementById('clear-btn');
-
-function createTaskItem(text) {
-    const li = document.createElement('li');
-    li.className = 'task-item';
-
-    // Checkbox
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.addEventListener('change', () => {
-        li.classList.toggle('completed', checkbox.checked);
-    });
-
-    // Text
-    const span = document.createElement('span');
-    span.className = 'task-text';
-    span.textContent = text;
-
-    // Delete knapp
-    const delBtn = document.createElement('button');
-    delBtn.className = 'delete-btn';
-    delBtn.textContent = '×'; // kors-symbol
-    delBtn.addEventListener('click', () => {
-        taskList.removeChild(li);
-        updateClearBtnVisibility();
-    });
-
-    li.appendChild(checkbox);
-    li.appendChild(span);
-    li.appendChild(delBtn);
-
-    return li;
-}
-
-function updateClearBtnVisibility() {
-    clearBtn.style.display = taskList.children.length > 0 ? 'block' : 'none';
-}
-
-addBtn.addEventListener('click', () => {
-    const text = newTaskInput.value.trim();
-    if (text === '') return;
-
-    const taskItem = createTaskItem(text);
-    taskList.appendChild(taskItem);
-    newTaskInput.value = '';
-    newTaskInput.focus();
-    updateClearBtnVisibility();
-});
-
-newTaskInput.addEventListener('keyup', (e) => {
-    if (e.key === 'Enter') addBtn.click();
-});
-
-clearBtn.addEventListener('click', () => {
-    taskList.innerHTML = '';
-    updateClearBtnVisibility();
-});
-
-updateClearBtnVisibility();
+    li.querySelector(".delete-btn").addEventListener("click", () => li.remove());
+  
+    document.getElementById("task-list").appendChild(li);
+    input.value = "";
+  });
+  
+  document.getElementById("clear-btn").addEventListener("click", () => {
+    document.getElementById("task-list").innerHTML = "";
+  });
+  
+  // Kalkylator
+  document.getElementById("calc-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+  
+    const date = new Date(document.getElementById("work-date").value);
+    const start = toMinutes(document.getElementById("start-time").value);
+    const end = toMinutes(document.getElementById("end-time").value);
+    const breakStart = toMinutes(document.getElementById("break-start").value);
+    const breakEnd = toMinutes(document.getElementById("break-end").value);
+    const hourly = parseFloat(document.getElementById("hourly-wage").value);
+  
+    const day = date.getDay();
+    let totalPay = 0;
+  
+    for (let i = start; i < end; i++) {
+      if (i >= breakStart && i < breakEnd) continue;
+  
+      const hour = i / 60;
+      let ob = 0;
+  
+      if (day === 0 || (day === 6 && hour >= 12)) ob = 2;
+      else if (day >= 1 && day <= 5 && hour >= 20) ob = 1.7;
+      else if (day >= 1 && day <= 5 && hour >= 18.25) ob = 1.5;
+      else ob = 1;
+  
+      totalPay += hourly * ob / 60;
+    }
+  
+    document.getElementById("result").innerHTML =
+      `<p><strong>Lön:</strong> ${totalPay.toFixed(2)} kr</p>`;
+  });
+  
+  function toMinutes(t) {
+    const [h, m] = t.split(":").map(Number);
+    return h * 60 + m;
+  }
+  
