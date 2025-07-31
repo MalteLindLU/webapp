@@ -55,7 +55,9 @@ function startApp(sectionId) {
     document.getElementById("task-list").innerHTML = "";
   });
   
-  // Kalkylator
+  // Kalkylator - total lön och semesterersättning
+  let totalPay = 0;
+  
   document.getElementById("calc-form").addEventListener("submit", function (e) {
     e.preventDefault();
   
@@ -67,7 +69,7 @@ function startApp(sectionId) {
     const hourly = parseFloat(document.getElementById("hourly-wage").value);
   
     const day = date.getDay();
-    let totalPay = 0;
+    let payForShift = 0;
   
     for (let i = start; i < end; i++) {
       if (i >= breakStart && i < breakEnd) continue;
@@ -80,15 +82,27 @@ function startApp(sectionId) {
       else if (day >= 1 && day <= 5 && hour >= 18.25) ob = 1.5;
       else ob = 1;
   
-      totalPay += hourly * ob / 60;
+      payForShift += hourly * ob / 60;
     }
   
+    totalPay += payForShift;
+    const vacationPay = totalPay * 0.12; // 12% semesterersättning
+  
     document.getElementById("result").innerHTML =
-      `<p><strong>Lön:</strong> ${totalPay.toFixed(2)} kr</p>`;
+      `<p><strong>Passets lön:</strong> ${payForShift.toFixed(2)} kr</p>
+       <p><strong>Totalsumma (alla pass):</strong> ${totalPay.toFixed(2)} kr</p>
+       <p><strong>Semesterersättning (12%):</strong> ${vacationPay.toFixed(2)} kr</p>`;
   });
   
+  // Hjälpfunktion för att konvertera tid till minuter
   function toMinutes(t) {
     const [h, m] = t.split(":").map(Number);
     return h * 60 + m;
   }
+  
+  // Nollställ total summa
+  document.getElementById("reset-total").addEventListener("click", () => {
+    totalPay = 0;
+    document.getElementById("result").innerHTML = "";
+  });
   
